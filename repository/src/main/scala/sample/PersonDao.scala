@@ -13,8 +13,18 @@ where id = /* id */0
   def selectById(id:Int): Option[Person]
 
   @Select("""
-select * from person
-where id = /* id */0
+select
+    p.id,
+    p.name,
+    d.id as department_id,
+    d.name as department_name
+from
+    person p
+    inner join
+    department d
+    on (p.department_id = d.id)
+where
+    p.id = /*id*/0
   """)
   def selectWithDeparmentById(id: Int): Option[PersonDepartment]
 
@@ -30,5 +40,5 @@ select * from person
   def update(person: Person): Result[Person]
 
   @Delete
-  def delete(person: Person): Result[Person]
+  def delete(person: Person): Int
 }   
