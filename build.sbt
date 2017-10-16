@@ -12,7 +12,6 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala).settings(
     version := "0.1.0"
   )),
   name := "domala-play-sample",
-  metaMacroSettings,
   libraryDependencies ++= Seq(
     guice,
     ws,
