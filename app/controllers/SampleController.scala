@@ -27,7 +27,7 @@ class SampleController @Inject() (val controllerComponents: ControllerComponents
     )
   }
 
-  def selectWithDeparmentById(id: Int) = Action.async { 
+  def selectWithDeparmentById(id: Int) = Action.async {
     Future { Required {
       dao.selectWithDeparmentById(id)
     }}.map(_.map( person =>
