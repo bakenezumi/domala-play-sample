@@ -47,6 +47,8 @@ class SampleController @Inject() (val controllerComponents: ControllerComponents
     )
   }
 
+  import scala.language.implicitConversions
+  import scala.language.reflectiveCalls
   implicit def as(request: Request[AnyContent]) = new {
     def asPerson = request.body.asJson.map(_.as[Person])
       .getOrElse(throw new RuntimeException("Request body colud not parse"))
