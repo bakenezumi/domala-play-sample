@@ -29,7 +29,7 @@ lazy val repository = (project in file("repository")).settings(
   )),
   metaMacroSettings,
   libraryDependencies ++= Seq(
-    "com.github.domala" %% "domala" % "0.1.0-beta.4"
+    "com.github.domala" %% "domala" % "0.1.0-beta.5"
   ),
   publishArtifact in (Compile, packageDoc) := false,
   publishArtifact in packageDoc := false,
