@@ -20,31 +20,28 @@ class SampleController @Inject() (val controllerComponents: ControllerComponents
   def selectById(id: Int) = Action.async {
     Future { Required {
       dao.selectById(id)
-    }}.map(_.map( person =>
-      Ok(Json.toJson(person))
-    ).getOrElse(
-      NotFound("not found."))
-    )
+    }}.map {
+      case Some(person) => Ok(Json.toJson(person))
+      case None => NotFound("not found.")
+    }
   }
 
   def selectWithDeparmentById(id: Int) = Action.async {
     Future { Required {
       dao.selectWithDeparmentById(id)
-    }}.map(_.map( person =>
-      Ok(Json.toJson(person))
-    ).getOrElse(
-      NotFound("not found."))
-    )
+    }} map {
+      case Some(person) => Ok(Json.toJson(person))
+      case None => NotFound("not found.")
+    }
   }
 
   def selectAll = Action.async {
     Future { Required {
       dao.selectAll
-    }}.map(_ match {
-        case Nil => NotFound("not found.")
-        case persons => Ok(Json.toJson(persons))
-      }
-    )
+    }} map {
+      case Nil => NotFound("not found.")
+      case persons => Ok(Json.toJson(persons))
+    }
   }
 
   import scala.language.implicitConversions
@@ -57,19 +54,25 @@ class SampleController @Inject() (val controllerComponents: ControllerComponents
   def insert = Action.async { request =>
     Future { Required {
       dao.insert(request.asPerson)
-    }}.map(result => Ok(Json.toJson(result)))
+    }} map { result => 
+      Ok(Json.toJson(result))
+    }
   }
 
   def update = Action.async { request =>
     Future { Required {
       dao.update(request.asPerson)
-    }}.map(result => Ok(Json.toJson(result)))
+    }} map { result =>
+      Ok(Json.toJson(result))
+    }
   }
 
   def delete(id: Int) = Action.async {
     Future { Required {
-      dao.selectById(id).map(person => dao.delete(person)).getOrElse(0)
-    }}.map(result => Ok(Json.toJson(result)))
+      dao.selectById(id).map(dao.delete).getOrElse(0)
+    }} map { result =>
+      Ok(Json.toJson(result))
+    }
   }
 
 }

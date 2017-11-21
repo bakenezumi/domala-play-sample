@@ -10,7 +10,7 @@ import sample._
 
 object PersonConverter {
 
-  implicit val writesName = Writes[Name] { name => JsString(name.value) }
+  implicit val writesName = Writes[Name] { case Name(name) => JsString(name) }
   implicit val readsName = Reads[Name] { json => json.validate[String] map (name => Name(name)) }
 
   implicit def writesAddress = Json.writes[Address]
@@ -21,14 +21,7 @@ object PersonConverter {
 
   implicit def writesPersonDepartment = Json.writes[PersonDepartment]
 
-  implicit val writesDomaResult = new Writes[Result[Person]] {
-    def writes(r: Result[Person]): JsValue = {
-      Json.obj(
-        "entity" -> r.entity,
-        "count" -> r.count
-      )
-    }
-  }
+  implicit def writesDomaResult = Json.writes[Result[Person]]
 
 }
 
