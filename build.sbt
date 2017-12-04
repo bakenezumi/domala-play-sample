@@ -1,9 +1,7 @@
 lazy val metaMacroSettings: Seq[Def.Setting[_]] = Seq(
-  resolvers += Resolver.sonatypeRepo("releases"),
-  resolvers += Resolver.bintrayRepo("scalameta", "maven"),
   addCompilerPlugin("org.scalameta" % "paradise" % "3.0.0-M10" cross CrossVersion.full),
   scalacOptions += "-Xplugin-require:macroparadise",
-  scalacOptions in (Compile, console) := Seq()
+  scalacOptions in (Compile, console) ~= (_ filterNot (_ contains "paradise")) // macroparadise plugin doesn't work in repl yet.
 )
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala).settings(
@@ -29,7 +27,7 @@ lazy val repository = (project in file("repository")).settings(
   )),
   metaMacroSettings,
   libraryDependencies ++= Seq(
-    "com.github.domala" %% "domala" % "0.1.0-beta.5"
+    "com.github.domala" %% "domala" % "0.1.0-beta.6"
   ),
   publishArtifact in (Compile, packageDoc) := false,
   publishArtifact in packageDoc := false,
