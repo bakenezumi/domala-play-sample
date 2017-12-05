@@ -13,9 +13,11 @@ import sample._
 import PersonConverter._
 
 @Singleton
-class SampleController @Inject() (val controllerComponents: ControllerComponents)(implicit config: Config, ec: JdbcExecutionContext) extends BaseController {
+class SampleController @Inject()
+(val controllerComponents: ControllerComponents, daoProvider: DaoProvider)
+(implicit config: Config, ec: JdbcExecutionContext) extends BaseController {
 
-  lazy val dao: PersonDao = PersonDao.impl
+  lazy val dao: PersonDao = daoProvider.personDao
 
   def selectById(id: Int) = Action.async {
     Future { Required {
