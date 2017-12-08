@@ -17,7 +17,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala).settings(
     evolutions,
     "com.h2database" % "h2" % "1.4.196",
     "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
-  ) 
+  )
 ) dependsOn repository aggregate repository
 
 lazy val repository = (project in file("repository")).settings(
@@ -31,8 +31,19 @@ lazy val repository = (project in file("repository")).settings(
   ),
   publishArtifact in (Compile, packageDoc) := false,
   publishArtifact in packageDoc := false,
-  sources in (Compile,doc) := Seq.empty  
+  sources in (Compile, doc) := Seq.empty  
 )
+
+// for windows https://docs.oracle.com/javase/tutorial/deployment/jar/downman.html
+lazy val shortyJarName = "shorty-classpath.jar"
+scriptClasspath := {
+  val manifest = new java.util.jar.Manifest()
+  manifest.getMainAttributes().putValue("Class-Path", scriptClasspath.value.mkString(" "))
+  val shortyJar = (target in Universal).value / "lib" / shortyJarName
+  IO.jar(Seq.empty, shortyJar, manifest)
+  Seq(shortyJar.getName)
+}
+mappings in Universal += (((target in Universal).value / "lib" / shortyJarName) -> s"lib/$shortyJarName")
 
 // https://github.com/playframework/playframework/issues/7832
 evictionWarningOptions in update := EvictionWarningOptions.default
