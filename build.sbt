@@ -27,7 +27,8 @@ lazy val repository = (project in file("repository")).settings(
   )),
   metaMacroSettings,
   libraryDependencies ++= Seq(
-    "com.github.domala" %% "domala" % "0.1.0-beta.6"
+    "org.scalameta" %% "scalameta" % "1.8.0" % Provided,
+    "com.github.domala" %% "domala" % "0.1.0-beta.8"
   ),
   publishArtifact in (Compile, packageDoc) := false,
   publishArtifact in packageDoc := false,
