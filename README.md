@@ -21,7 +21,7 @@ curl http://localhost:9000/persons/1
 curl -X POST -H "Content-Type: application/json" -d '{"name":"WARD","age":20,"address":{"city":"Fukuoka","street":"Gion"}}' http://localhost:9000/persons
 
 #update
-curl -X PUT -H "Content-Type: application/json" -d '{"id":1,"name":"SMITH","age":30,"address":{"city":"Tokyo","street":"Marunouchi"},"version":0}' http://localhost:9000/persons
+curl -X PUT -H "Content-Type: application/json" -d '{"name":"SMITH","age":30,"address":{"city":"Tokyo","street":"Marunouchi"}}' http://localhost:9000/persons/1
 
 #delete
 curl -X DELETE  http://localhost:9000/persons/2

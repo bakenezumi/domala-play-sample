@@ -3,22 +3,25 @@
 # --- !Ups
  
 create table department(
-    id int not null identity primary key,
-    name varchar(20),
+    id int not null primary key,
+    name varchar(20) not null,
     version int not null
 );
 
 create table person(
-    id int not null identity primary key,
-    name varchar(20),
-    age int,
+    id int not null primary key,
+    name varchar(20) not null,
+    age int not null,
     city varchar(20) not null,
     street varchar(20) not null,
-    department_id int not null,
+    department_id int,
     version int not null,
     constraint fk_department_id foreign key(department_id) references department(id)
 );
 
+create sequence department_id_seq start with 3;
+
+create sequence person_id_seq start with 3;
 
 insert into department (id, name, version) values(1, 'ACCOUNTING', 0);
 insert into department (id, name, version) values(2, 'SALES', 0);
@@ -27,6 +30,10 @@ insert into person (id, name, age, city, street, department_id, version) values(
 insert into person (id, name, age, city, street, department_id, version) values(2, 'ALLEN', 20, 'Kyoto', 'Karasuma', 2, 0);
  
 # --- !Downs
+
+drop sequence person_id_seq;
+drop sequence department_id_seq start with 3;
  
 drop table person;
 drop table department;
+

@@ -1,6 +1,6 @@
 package sample
 
-import org.seasar.doma.jdbc.dialect.{Dialect, H2Dialect}
+import org.seasar.doma.jdbc.dialect.Dialect
 import play.api.inject.Module
 import play.api.{Configuration, Environment}
 
@@ -10,7 +10,6 @@ class SampleModule extends Module {
     Seq(
       bind[Dialect].toInstance(getDialect(env, conf, "default")),
       bind[domala.jdbc.Config].to(classOf[SampleConfig]),
-      bind[DaoProvider].toSelf,
       bind[JdbcExecutionContext].to(classOf[JdbcExecutionContextImpl])
     )
   }
@@ -29,14 +28,8 @@ class SampleModule extends Module {
 
 }
 
-// Dao provider
-import javax.inject.{Inject, Singleton}
-@Singleton
-class DaoProvider @Inject()(implicit config: domala.jdbc.Config) {
-  lazy val personDao = PersonDao.impl
-}
-
 // jdbc execution thread pool
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 import akka.actor.ActorSystem
 import play.api.libs.concurrent.CustomExecutionContext

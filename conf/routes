@@ -1,7 +1,7 @@
 GET     /persons                    controllers.SampleController.selectAll
 GET     /persons/:id                controllers.SampleController.selectById(id: Int)
 POST    /persons                    controllers.SampleController.insert
-PUT     /persons                    controllers.SampleController.update
+PUT     /persons/:id                controllers.SampleController.update(id: Int)
 DELETE  /persons/:id                controllers.SampleController.delete(id: Int)
 GET     /person-departments/:id     controllers.SampleController.selectWithDeparmentById(id: Int)
 

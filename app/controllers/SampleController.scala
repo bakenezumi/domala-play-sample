@@ -8,29 +8,30 @@ import play.api.libs.json._
 
 import domala.Required
 import domala.jdbc.Config
+import domala.jdbc.DaoProvider
 
 import sample._
 import PersonConverter._
 
 @Singleton
 class SampleController @Inject()
-(val controllerComponents: ControllerComponents, daoProvider: DaoProvider)
+(val controllerComponents: ControllerComponents)
 (implicit config: Config, ec: JdbcExecutionContext) extends BaseController {
 
-  lazy val dao: PersonDao = daoProvider.personDao
+  lazy val dao: PersonDao = DaoProvider.get[PersonDao]
 
-  def selectById(id: Int) = Action.async {
+  def selectById(id: Long) = Action.async {
     Future { Required {
-      dao.selectById(id)
+      dao.selectById(ID(id))
     }}.map {
       case Some(person) => Ok(Json.toJson(person))
       case None => NotFound("not found.")
     }
   }
 
-  def selectWithDeparmentById(id: Int) = Action.async {
+  def selectWithDeparmentById(id: Long) = Action.async {
     Future { Required {
-      dao.selectWithDeparmentById(id)
+      dao.selectWithDeparmentById(ID(id))
     }} map {
       case Some(person) => Ok(Json.toJson(person))
       case None => NotFound("not found.")
@@ -46,34 +47,37 @@ class SampleController @Inject()
     }
   }
 
-  import scala.language.implicitConversions
-  import scala.language.reflectiveCalls
-  implicit def as(request: Request[AnyContent]) = new {
-    def asPerson = request.body.asJson.map(_.as[Person])
+  implicit def toPerson(request: Request[AnyContent]) = request.body.asJson.map(_.as[Person])
       .getOrElse(throw new RuntimeException("Request body colud not parse"))
-  }
 
   def insert = Action.async { request =>
     Future { Required {
-      dao.insert(request.asPerson)
+      dao.insert(toPerson(request))
     }} map { result => 
       Ok(Json.toJson(result))
     }
   }
 
-  def update = Action.async { request =>
+  def update(id: Long) = Action.async { request =>
     Future { Required {
-      dao.update(request.asPerson)
-    }} map { result =>
-      Ok(Json.toJson(result))
+      dao.selectById(ID(id)) map { selected =>
+        val entity = toPerson(request).copy(
+          id = selected.id,
+          version = selected.version)
+        dao.update(entity)
+      } 
+    }} map { 
+      case Some(result) => Ok(Json.toJson(result))
+      case None => NotFound("not found.")
     }
   }
 
-  def delete(id: Int) = Action.async {
+  def delete(id: Long) = Action.async {
     Future { Required {
-      dao.selectById(id).map(dao.delete).getOrElse(0)
-    }} map { result =>
-      Ok(Json.toJson(result))
+      dao.selectById(ID(id)).map(dao.delete)
+    }} map {
+      case Some(result) => Ok(Json.toJson(result))
+      case None => NotFound("not found.")
     }
   }
 
