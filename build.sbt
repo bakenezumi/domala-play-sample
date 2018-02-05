@@ -6,7 +6,7 @@ lazy val metaMacroSettings: Seq[Def.Setting[_]] = Seq(
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala).settings(
   inThisBuild(List(
-    scalaVersion := "2.12.3",
+    scalaVersion := "2.12.4",
     version := "0.1.0"
   )),
   name := "domala-play-sample",
@@ -22,13 +22,14 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala).settings(
 
 lazy val repository = (project in file("repository")).settings(
   inThisBuild(List(
-    scalaVersion := "2.12.3",
+    scalaVersion := "2.12.4",
     version := "0.1.0"
   )),
   metaMacroSettings,
   libraryDependencies ++= Seq(
-    "org.scalameta" %% "scalameta" % "1.8.0" % Provided,
-    "com.github.domala" %% "domala" % "0.1.0-beta.8"
+    "com.github.domala" %% "domala" % "0.1.0-beta.9",
+    "com.github.domala" %% "domala-paradise" % "0.1.0-beta.9" % Provided,
+    "org.scalameta" %% "scalameta" % "1.8.0" % Provided
   ),
   publishArtifact in (Compile, packageDoc) := false,
   publishArtifact in packageDoc := false,
